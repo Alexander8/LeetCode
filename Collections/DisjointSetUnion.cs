@@ -1,4 +1,4 @@
- public sealed class DisjointSetUnion
+public sealed class DisjointSetUnion
 {
 	private readonly int[] _parent;
 	private readonly int[] _rank;

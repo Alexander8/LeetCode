@@ -46,6 +46,8 @@ public sealed class Heap<TItem>
 
 		return root; 
 	}
+    
+    public int Count => _size;
 
 	private void Resize()
 	{

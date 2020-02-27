@@ -15,7 +15,7 @@ public class Solution
             if (idx < events.Length && heap.Count == 0)
                 day = events[idx][0];
             
-            while (idx < events.Length && events[idx][0] <= day)
+            while (idx < events.Length && events[idx][0] == day)
             {
                 heap.Add(events[idx][1]);
                 ++idx;

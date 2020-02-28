@@ -3,7 +3,7 @@ public class Solution
     public bool IsPerfectSquare(int num) 
     {
         long left = 1;
-        long right = int.MaxValue;
+        long right = num;
 
         while (left <= right)
         {

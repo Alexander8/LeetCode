@@ -1,5 +1,36 @@
 public class FreqStack
 {
+    private readonly Dictionary<int, int> _freq = new Dictionary<int, int>();
+    private readonly Dictionary<int, Stack<int>> _groups = new Dictionary<int, Stack<int>>();
+    private int _maxFreq;
+
+    public void Push(int x)
+    {
+        var freq = _freq.GetValueOrDefault(x, 0) + 1;
+        _freq[x] = freq;
+        _maxFreq = Math.Max(_maxFreq, freq);
+
+        var stack = _groups.GetValueOrDefault(freq, new Stack<int>());
+        stack.Push(x);
+        _groups[freq] = stack;
+    }
+
+    public int Pop()
+    {
+        var group = _groups[_maxFreq];
+        var res = group.Pop();
+
+        _freq[res] -= 1;
+
+        if (group.Count == 0)
+            --_maxFreq;
+
+        return res;
+    }
+}
+ 
+public class FreqStack
+{
     private readonly Dictionary<int, Entry> _valToEntry = new Dictionary<int, Entry>();
     private readonly Dictionary<int, int> _idToVal = new Dictionary<int, int>();
     private readonly SortedSet<Entry> _sorted = new SortedSet<Entry>(new EntryComparer());

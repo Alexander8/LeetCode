@@ -30,7 +30,7 @@ public class FreqStack
 
     public int Pop()
     {
-        var entry = _sorted.First();
+        var entry = _sorted.Min;
         _sorted.Remove(entry);
 
         var id = entry.Ids.Pop();

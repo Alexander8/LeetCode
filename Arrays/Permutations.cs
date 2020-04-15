@@ -34,3 +34,41 @@ private static IList<IList<int>> Permute(List<int> nums)
     
     return res;
 }
+
+// #2
+public class Solution 
+{
+    public IList<IList<int>> Permute(int[] nums) 
+    {
+        var permutations = new List<IList<int>>();
+        
+        GetPermutations(nums, 0, permutations);
+        
+        return permutations;
+    }
+    
+    private static void GetPermutations(int[] arr, int i, List<IList<int>> permutations)
+    {
+        if (i == arr.Length)
+        {
+            var arrTmp = new List<int>(arr);
+            permutations.Add(arrTmp);
+        }
+        else
+        {
+            for (var j = i; j < arr.Length; ++j)
+            {
+                Swap(arr, i, j);
+                GetPermutations(arr, i + 1, permutations);
+                Swap(arr, i, j);
+            }
+        }
+    }
+
+    private static void Swap(int[] arr, int i, int j)
+    {
+        var item = arr[i];
+        arr[i] = arr[j];
+        arr[j] = item;
+    }
+}

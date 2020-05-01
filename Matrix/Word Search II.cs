@@ -120,3 +120,97 @@ public class Solution
         }
     }
 }
+
+// #2
+public class Solution 
+{
+    private static readonly int[][] _dirs = new int[4][]
+    {
+        new[] { 0, 1 },
+        new[] { -1, 0 },
+        new[] { 1, 0 },
+        new[] { 0, -1 }
+    };
+    
+    public IList<string> FindWords(char[][] board, string[] words) 
+    {
+        var foundWords = new HashSet<string>();
+        var trie = new Trie();
+        
+        for (var i = 0; i < words.Length; ++i)
+            trie.Add(words[i]);
+        
+        for (var i = 0; i < board.Length; ++i)
+            for (var j = 0; j < board[i].Length; ++j)
+                foundWords.UnionWith(FindWords(board, i, j, trie));
+        
+        return foundWords.ToList();
+    }
+    
+   private static HashSet<string> FindWords(char[][] board, int r, int c, Trie trie)
+    {
+        var foundWords = new HashSet<string>();    
+        var q = new Queue<(int r, int c, Trie trie, HashSet<(int, int)> path)>();
+
+        q.Enqueue((r, c, trie, new HashSet<(int, int)> { (r, c) }));
+
+        while (q.Count > 0)
+        {
+            var letter = q.Dequeue();
+            var currentTrie = letter.trie.Get(board[letter.r][letter.c]);
+            if (currentTrie == null)
+                continue;
+
+            if (currentTrie.Word != null)
+                foundWords.Add(currentTrie.Word);
+
+            for (var d = 0; d < _dirs.Length; ++d)
+            {
+                var rTmp = letter.r + _dirs[d][0];
+                var cTmp = letter.c + _dirs[d][1];
+
+                if (rTmp < 0 || rTmp >= board.Length || cTmp < 0 || cTmp >= board[rTmp].Length)
+                    continue;
+
+                if (currentTrie.Get(board[rTmp][cTmp]) != null && !letter.path.Contains((rTmp, cTmp)))
+                {
+                    var path = new HashSet<(int, int)>(letter.path);
+                    path.Add((rTmp, cTmp));
+                    q.Enqueue((rTmp, cTmp, currentTrie, path));
+                }
+            }
+        }
+
+        return foundWords;
+    }
+    
+    private sealed class Trie
+    {
+        private readonly Trie[] _tries = new Trie[26];
+        
+        public string Word { get; private set; }
+        
+        public void Add(string w, int i = 0)
+        {
+            if (i == w.Length)
+                Word = w;
+            
+            if (i < w.Length)
+            {
+                var trie = _tries[w[i] - 'a'];
+                if (trie == null)
+                {
+                    trie = new Trie();
+                    _tries[w[i] - 'a'] = trie;
+                }
+                
+                trie.Add(w, i + 1);
+            }
+        }
+        
+        public Trie Get(char c)
+        {
+            return _tries[c - 'a'];
+        }
+    }
+}

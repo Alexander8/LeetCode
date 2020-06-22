@@ -1,7 +1,7 @@
 public class Solution
 {
     private const int Base = 25;
-    private const int Modulo = 100_003;
+    private const long Modulo = 999999999989;
 
     public string LongestDupSubstring(string S)
     {
@@ -13,7 +13,7 @@ public class Solution
         {
             var m = lo + (hi - lo) / 2;
             var hasDuplicate = false;
-            var map = new Dictionary<int, List<int>>();
+            var map = new Dictionary<long, List<int>>();
 
             var (hash, maxPowerOfBase) = GetHash(S, m);
             map.Add(hash, new List<int> { 0 });
@@ -62,10 +62,10 @@ public class Solution
         return result;
     }
 
-    private static (int hash, int maxPowerOfBase) GetHash(string s, int len)
+    private static (long hash, long maxPowerOfBase) GetHash(string s, int len)
     {
-        var hash = 0;
-        var maxPowerOfBase = 1;
+        long hash = 0;
+        long maxPowerOfBase = 1;
 
         for (var i = 0; i < len; ++i)
         {

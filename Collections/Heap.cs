@@ -1,10 +1,10 @@
 public sealed class Heap<TItem>
 {
-	private readonly IComparer<TItem> _comparer;
+	private readonly Func<TItem, TItem, int> _comparer;
 	private TItem[] _arr;
 	private int _size;
 
-	public Heap(IComparer<TItem> comparer, int capacity = 2048)
+	public Heap(Func<TItem, TItem, int> comparer, int capacity = 2048)
 	{
 		_comparer = comparer;
 		_arr = new TItem[capacity];
@@ -22,7 +22,7 @@ public sealed class Heap<TItem>
 		var i = _size - 1;
 		_arr[i] = item;
 
-		while (i != 0 && _comparer.Compare(_arr[Parent(i)], _arr[i]) > 0)
+		while (i != 0 && _comparer(_arr[Parent(i)], _arr[i]) > 0)
 		{
 			Swap(i, Parent(i));
 			i = Parent(i); 
@@ -57,7 +57,7 @@ public sealed class Heap<TItem>
 	}
 
 	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-	private void Swap(int i , int j)
+	private void Swap(int i, int j)
 	{
 		var tmp = _arr[i];
 		_arr[i] = _arr[j];
@@ -70,10 +70,10 @@ public sealed class Heap<TItem>
 		var r = Right(i); 
 		var smallest = i; 
 
-		if (l < _size && _comparer.Compare(_arr[l], _arr[i]) < 0)
+		if (l < _size && _comparer(_arr[l], _arr[i]) < 0)
 			smallest = l; 
 
-		if (r < _size && _comparer.Compare(_arr[r], _arr[smallest]) < 0)
+		if (r < _size && _comparer(_arr[r], _arr[smallest]) < 0)
 			smallest = r; 
 
 		if (smallest != i) 
